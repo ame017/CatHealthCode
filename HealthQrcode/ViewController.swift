@@ -22,6 +22,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
     
+    @IBOutlet weak var day3Button: UIButton!
+    @IBOutlet weak var day7Button: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var headIconImageView: UIImageView!
     
     lazy var dateFormatter : DateFormatter = {
         let object = DateFormatter()
@@ -51,6 +55,7 @@ class ViewController: UIViewController {
         var name = UserDefaults.standard.string(forKey: "_user_name")
         let card = UserDefaults.standard.string(forKey: "_user_id_card")
         let hasRun = UserDefaults.standard.bool(forKey: "_has_run")
+        let isFemale = UserDefaults.standard.bool(forKey: "_is_female")
         //由于版本迭代问题,初次运行清除名字
         if !hasRun {
             name = nil
@@ -59,6 +64,9 @@ class ViewController: UIViewController {
         }
         self.nameLabel.text = name ?? "点击右上角输入姓名"
         self.idLabel.text = card ?? "点击右上角输入身份证号"
+        if isFemale {
+            self.headIconImageView.image = UIImage.init(named: "head_icon_f")
+        }
     }
     
     private func updateTime(){
@@ -104,7 +112,7 @@ class ViewController: UIViewController {
     
     @IBAction func refreshButtonClick(_ sender: Any) {
         SVProgressHUD.show(withStatus: "正在加载")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             SVProgressHUD.dismiss()
             self.imageNumber += 1
             self.qrImageView.image = UIImage.init(named: "qr_code_" + String(self.imageNumber%6))
@@ -133,6 +141,25 @@ class ViewController: UIViewController {
     @IBAction func shengjingtongButtonClick(_ sender: Any) {
         UIApplication.shared.open(URL.init(string: "SYSubWay://")!, options: [:]) { (completion) in
             
+        }
+    }
+    @IBAction func dayButtonClick(_ sender: UIButton) {
+        self.day3Button.isSelected = false
+        self.day3Button.borderColor = UIColor.init(red: 222/255.0, green: 222/255.0, blue: 222/255.0, alpha: 1.0)
+        self.day7Button.isSelected = false
+        self.day7Button.borderColor = UIColor.init(red: 222/255.0, green: 222/255.0, blue: 222/255.0, alpha: 1.0)
+        sender.isSelected = true
+        sender.borderColor = .systemBlue
+        self.titleLabel.text = "绿码·无"
+    }
+    @IBAction func headIconControlClick(_ sender: Any) {
+        let isFemale = UserDefaults.standard.bool(forKey: "_is_female")
+        if isFemale {
+            UserDefaults.standard.setValue(0, forKey: "_is_female")
+            self.headIconImageView.image = UIImage.init(named: "head_icon")
+        }else{
+            UserDefaults.standard.setValue(1, forKey: "_is_female")
+            self.headIconImageView.image = UIImage.init(named: "head_icon_f")
         }
     }
     
